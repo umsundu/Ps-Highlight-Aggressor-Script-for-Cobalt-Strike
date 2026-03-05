@@ -1,0 +1,311 @@
+# Colour Coded Process Listing
+# Rewritten for stability with comprehensive modern EDR/AV coverage
+#
+# Colours:
+#   RED        = AV/EDR/Security processes
+#   ORANGE     = SIEM/IR/Threat hunting agents
+#   YELLOW     = Current beacon process
+#   BLUE       = explorer.exe / winlogon.exe
+#   GREEN      = Browsers
+#   LIGHT BLUE = Admin/IR/forensic tools
+
+set BEACON_OUTPUT_PS {
+
+    $bd = bdata($1);
+
+    # ---------------------------------------------------------------
+    # EDR / AV / Security processes (RED)
+    # ---------------------------------------------------------------
+    @edr = @(
+        # Microsoft Defender / MDE
+        "MsMpEng.exe", "MsSense.exe", "SenseCncProxy.exe", "SenseIR.exe",
+        "SenseNdr.exe", "SenseSampleUploader.exe", "MSASCuiL.exe",
+        "MpCmdRun.exe", "NisSrv.exe", "SecurityHealthService.exe",
+        "SecurityHealthSystray.exe", "wscsvc.exe",
+
+        # CrowdStrike Falcon
+        "CSFalconService.exe", "CSFalconContainer.exe", "falconctl.exe",
+        "falcon-sensor.exe",
+
+        # SentinelOne
+        "SentinelAgent.exe", "SentinelServiceHost.exe", "SentinelStaticEngine.exe",
+        "SentinelStaticEngineScanner.exe", "SentinelUI.exe",
+        "SentinelMemoryScanner.exe", "LogProcessorService.exe",
+
+        # Carbon Black (VMware)
+        "cb.exe", "CbDefense.exe", "CbDefenseSensor.exe", "RepMgr.exe",
+        "RepUtils.exe", "RepUx.exe", "RepWAV.exe", "RepWSC.exe",
+        "cbdaemon.exe", "cbsensor.exe",
+
+        # Cylance (Blackberry)
+        "CylanceSvc.exe", "CylanceUI.exe", "CylanceProtectSetup.exe",
+
+        # Cortex XDR / Traps (Palo Alto)
+        "cyserver.exe", "CyveraService.exe", "CyvrFsFlt.exe",
+        "PanGPS.exe", "PanGPA.exe", "pangpanetsvc.exe",
+        "traps_daemon.exe", "trapsd.exe",
+
+        # Trend Micro
+        "TMBMSRV.exe", "ntrtscan.exe", "tmlisten.exe", "TmPfw.exe",
+        "TmCCSF.exe", "TmWSCS.exe", "TmListen.exe", "Tmntsrv.exe",
+        "TmProxy.exe", "CNTAoSMgr.exe", "PccNTMon.exe",
+
+        # Sophos
+        "SavService.exe", "SAVAdminService.exe", "SophosAgent.exe",
+        "SophosFS.exe", "SophosHealth.exe", "SophosNtpService.exe",
+        "SophosSafestore.exe", "SophosUI.exe", "SophosUpdateD.exe",
+        "ALMon.exe", "ALsvc.exe", "SAVMain.exe", "SAVScan.exe",
+        "swc_service.exe", "swi_fc.exe", "swi_filter.exe",
+        "swi_service.exe", "swi_update.exe",
+
+        # ESET
+        "ekrn.exe", "egui.exe", "EsetSvc.exe", "ERAAgent.exe",
+        "era.exe", "EsetKernelServiceProxy.exe",
+
+        # Kaspersky
+        "avp.exe", "avpui.exe", "kavtray.exe", "klnagent.exe",
+        "KLNAGENT.EXE", "kavfs.exe", "kavfswp.exe",
+
+        # McAfee / Trellix
+        "mcshield.exe", "mfemms.exe", "mfevtps.exe", "mfeann.exe",
+        "McAfeeFramework.exe", "FrameworkService.exe", "nailogon.exe",
+        "masvc.exe", "macompatsvc.exe",
+
+        # Symantec / Broadcom
+        "Smc.exe", "SmcGui.exe", "ccSvcHst.exe", "sepWscSvc.exe",
+        "SemSvc.exe", "snac.exe", "sylink.exe", "rtvscan.exe",
+        "VsTskMgr.exe", "DefWatch.exe",
+
+        # Tanium
+        "Tanium.exe", "TaniumClient.exe", "TaniumCX.exe",
+        "TaniumEndpointIndex.exe",
+
+        # Cybereason
+        "minionhost.exe", "CrAmTray.exe", "AmSvc.exe",
+        "CrsSvc.exe", "ExecutionPreventionSvc.exe",
+
+        # Elastic Endgame
+        "endgame.exe", "esensor.exe",
+
+        # Qualys
+        "QualysAgent.exe", "qualys-cloud-agent.exe",
+
+        # Rapid7 / InsightIDR
+        "ir_agent.exe", "insight-agent.exe",
+
+        # Secureworks / Red Cloak
+        "redcloak.exe", "RedCloakThreatDetectionClient.exe",
+
+        # Cisco AMP / Secure Endpoint
+        "sfc.exe", "iptray.exe", "ampdaemon.exe",
+
+        # Bitdefender
+        "bdagent.exe", "bdwtxag.exe", "bdredline.exe", "BDSubWiz.exe",
+        "bdservicehost.exe", "BDHVactrl.exe", "seccenter.exe",
+
+        # Malwarebytes
+        "MBAMService.exe", "mbamtray.exe", "MBAMAgent.exe",
+
+        # Webroot
+        "WRSA.exe", "WRSkyClient.exe",
+
+        # F-Secure / WithSecure
+        "fshoster32.exe", "fsav32.exe", "fsgk32.exe", "fsma32.exe",
+        "fsorsp.exe", "fsaua.exe", "WithSecureHost.exe",
+
+        # Huntress
+        "HuntressAgent.exe", "HuntressUpdater.exe",
+
+        # Cynet
+        "CynetEPS.exe", "CynetMS.exe",
+
+        # Deep Instinct
+        "DISService.exe", "DeepInstinct.exe",
+
+        # Varonis
+        "VaronisEdgeService.exe",
+
+        # Ivanti / Lumension
+        "LUMSvc.exe", "LDSecSvc.exe",
+
+        # IBM BigFix
+        "BESClient.exe", "BESRelay.exe",
+
+        # Fortinet
+        "FortiESNAC.exe", "FortiProxy.exe", "fortitray.exe",
+
+        # Panda / WatchGuard
+        "PSANHost.exe", "PSUAMain.exe", "PSUAService.exe",
+
+        # Avast / AVG
+        "AvastSvc.exe", "AvastUI.exe", "aswBoot.exe",
+        "avgcsrva.exe", "avgcsrvx.exe", "avgnsa.exe", "avgnsx.exe",
+
+        # Trellix / FireEye HX
+        "xagt.exe", "xagtnotif.exe",
+
+        # Stairwell
+        "stairwell-agent.exe",
+
+        # Morphisec
+        "morphisec.exe",
+
+        # Wazuh
+        "wazuh-agent.exe", "wazuh-agentd.exe", "wazuh-modulesd.exe",
+        "wazuh-logcollector.exe", "wazuh-syscheckd.exe",
+
+        # OSSEC / OSSEC-HIDS
+        "ossec-agentd.exe", "ossec-execd.exe", "ossec-logcollector.exe",
+        "ossec-syscheckd.exe", "ossec-monitord.exe",
+
+        # Generic
+        "OmniAgent.exe", "PylumLoader.exe"
+    );
+
+    # ---------------------------------------------------------------
+    # SIEM / IR / Threat hunting agents (ORANGE)
+    # Seeing these means logs are being shipped somewhere or the
+    # blue team has active hunting capability - affects your opsec
+    # ---------------------------------------------------------------
+    @siem = @(
+        # Velociraptor - active threat hunting, high priority to spot
+        "velociraptor.exe",
+
+        # osquery - endpoint visibility / threat hunting
+        "osqueryd.exe", "osqueryi.exe",
+
+        # Elastic Agent / Beats - feeds into Elastic SIEM
+        "elastic-agent.exe", "winlogbeat.exe", "filebeat.exe",
+        "metricbeat.exe", "auditbeat.exe", "packetbeat.exe",
+        "heartbeat.exe",
+
+        # Splunk - if this is running logs are going somewhere
+        "splunkd.exe", "SplunkForwarder.exe",
+
+        # NXLog - log forwarding/aggregation
+        "nxlog.exe",
+
+        # Graylog / Sidecar
+        "graylog-sidecar.exe",
+
+        # Fluentd / Fluent Bit - log shipping
+        "fluentd.exe", "fluent-bit.exe",
+
+        # Logstash
+        "logstash.exe",
+
+        # Azure Monitor / Log Analytics agent
+        "MonAgentHost.exe", "MonAgentLauncher.exe", "MMAExtensionHeartbeatService.exe",
+        "HealthService.exe", "MicrosoftMonitoringAgent.exe",
+
+        # Sysmon - telemetry source, logs go to SIEM
+        "Sysmon.exe", "Sysmon64.exe",
+
+        # Carbon Black (EDR telemetry / IR)
+        "CbLiteSensor.exe",
+
+        # Falcon LogScale / Humio agent
+        "humio-agent.exe",
+
+        # Cribl - log pipeline
+        "cribl.exe",
+
+        # Datadog agent
+        "agent.exe", "datadog-agent.exe"
+    );
+
+    # ---------------------------------------------------------------
+    # Browsers (GREEN)
+    # ---------------------------------------------------------------
+    @browsers = @(
+        "chrome.exe", "firefox.exe", "iexplore.exe", "msedge.exe",
+        "MicrosoftEdge.exe", "MicrosoftEdgeCP.exe", "MicrosoftEdgeSH.exe",
+        "opera.exe", "brave.exe", "vivaldi.exe", "safari.exe",
+        "waterfox.exe", "palemoon.exe"
+    );
+
+    # ---------------------------------------------------------------
+    # Admin / IR / Forensic tools (LIGHT BLUE)
+    # ---------------------------------------------------------------
+    @admin = @(
+        # Sysinternals
+        "procexp.exe", "procexp64.exe", "Procmon.exe", "Procmon64.exe",
+        "tcpview.exe", "Autoruns.exe", "Autoruns64.exe", "autorunsc.exe",
+        "PsExec.exe", "PsExec64.exe", "procdump.exe", "procdump64.exe",
+        "ADExplorer.exe", "sigcheck.exe", "strings.exe",
+        "handle.exe", "handle64.exe", "RAMMap.exe", "vmmap.exe",
+        "Dbgview.exe", "accesschk.exe", "accesschk64.exe",
+        "pslist.exe", "pslist64.exe", "logonsessions.exe",
+
+        # Remote access / admin
+        "putty.exe", "kitty.exe", "MobaXterm.exe", "winscp.exe",
+        "mstsc.exe", "TeamViewer.exe", "AnyDesk.exe", "vncviewer.exe",
+
+        # Packet capture / network analysis
+        "wireshark.exe", "dumpcap.exe", "tshark.exe", "NetworkMiner.exe",
+        "netmon.exe", "fiddler.exe", "Fiddler.exe",
+
+        # Shells / terminals
+        "powershell.exe", "powershell_ise.exe", "pwsh.exe", "cmd.exe",
+        "wt.exe", "WindowsTerminal.exe", "bash.exe", "git-bash.exe",
+        "wsl.exe",
+
+        # Editors
+        "notepad.exe", "notepad++.exe", "Code.exe", "sublime_text.exe",
+
+        # Debuggers / reversing
+        "windbg.exe", "x64dbg.exe", "x32dbg.exe", "idag.exe", "idaw.exe",
+        "idaq.exe", "idaq64.exe",
+
+        # Task / process management
+        "TASKMGR.EXE", "mmc.exe", "regedit.exe", "regedt32.exe",
+
+        # Password managers
+        "KeePass.exe", "KeePassXC.exe", "1Password.exe", "lastpass.exe"
+    );
+
+    # ---------------------------------------------------------------
+    # Build output
+    # ---------------------------------------------------------------
+    local('$out $line $name $ppid $pid $arch $user $session @rows');
+
+    $out  = "\n";
+    $out .= "\cC[*]\o Process list\n";
+    $out .= "\cC[*]\o Beacon PID  : \c8" . $bd['pid'] . "\o\n";
+    $out .= "\cC[*]\o \c4RED\o        = AV/EDR\n";
+    $out .= "\cC[*]\o \c7ORANGE\o     = SIEM/IR/Threat hunting agent\n";
+    $out .= "\cC[*]\o \c8YELLOW\o     = This beacon\n";
+    $out .= "\cC[*]\o \c2BLUE\o       = Explorer/Winlogon\n";
+    $out .= "\cC[*]\o \c3GREEN\o      = Browser\n";
+    $out .= "\cC[*]\o \cBLIGHT BLUE\o = Admin/IR tool\n\n";
+    $out .= " PID    PPID   Name                          Arch   Session     User\n";
+    $out .= "\cE -----  -----  ----------------------------  -----  ----------  ----\o\n";
+
+    foreach $line (split("\n", ["$2" trim])) {
+        ($name, $ppid, $pid, $arch, $user, $session) = split("\t", $line);
+
+        if ($pid eq $bd['pid']) {
+            push(@rows, %(pid => $pid, entry => "\c8 $[6]pid $[6]ppid $[29]name $[6]arch $[11]session $user\o"));
+        } else if ($name in @edr) {
+            push(@rows, %(pid => $pid, entry => "\c4 $[6]pid $[6]ppid $[29]name $[6]arch $[11]session $user\o"));
+        } else if ($name in @siem) {
+            push(@rows, %(pid => $pid, entry => "\c7 $[6]pid $[6]ppid $[29]name $[6]arch $[11]session $user\o"));
+        } else if ($name eq "explorer.exe" || $name eq "winlogon.exe") {
+            push(@rows, %(pid => $pid, entry => "\c2 $[6]pid $[6]ppid $[29]name $[6]arch $[11]session $user\o"));
+        } else if ($name in @browsers) {
+            push(@rows, %(pid => $pid, entry => "\c3 $[6]pid $[6]ppid $[29]name $[6]arch $[11]session $user\o"));
+        } else if ($name in @admin) {
+            push(@rows, %(pid => $pid, entry => "\cB $[6]pid $[6]ppid $[29]name $[6]arch $[11]session $user\o"));
+        } else {
+            push(@rows, %(pid => $pid, entry => "  $[6]pid $[6]ppid $[29]name $[6]arch $[11]session $user"));
+        }
+    }
+
+    sort({ return $1['pid'] <=> $2['pid']; }, @rows);
+
+    foreach $line (@rows) {
+        $out .= $line['entry'] . "\n";
+    }
+
+    return $out;
+}
