@@ -2,7 +2,7 @@
 
 Aggressor script for Cobalt Strike that colour codes the output of `ps` to make it easy to spot EDR, browsers, admin tools and your current beacon process at a glance.
 
-Based on the original work by [@r3dQu1nn](https://github.com/harleyQu1nn/) and [@oldb00t](https://github.com/oldb00t). Rewritten because the original was causing Cobalt Strike instability.
+Based on the original work by [@r3dQu1nn](https://github.com/harleyQu1nn/). Rewritten because the original was causing Cobalt Strike instability.
 
 ## Colours
 
